@@ -6,6 +6,7 @@ const errorHandler = require('./middleware/errorHandler')
 const logger = require('./utils/logger')
 
 const authRoutes = require('./routes/auth')
+const carRoutes = require('./routes/cars')
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -14,6 +15,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/cars', carRoutes)
 
 app.get('/', (req, res) => {
   res.send(`
