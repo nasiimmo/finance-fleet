@@ -8,6 +8,7 @@ const logger = require('./utils/logger')
 const authRoutes = require('./routes/auth')
 const carRoutes = require('./routes/cars')
 const bookingRoutes = require('./routes/bookings')
+const favouriteRoutes = require('./routes/favourites')
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/cars', carRoutes)
 app.use('/api/bookings', bookingRoutes)
+app.use('/api/favourites', favouriteRoutes)
 
 app.get('/', (req, res) => {
   res.send(`
