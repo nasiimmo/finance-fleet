@@ -11,13 +11,17 @@
     "dev": "nodemon index.js",
     "test": "jest --forceExit --detectOpenHandles"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "jest": "^30.3.0",
