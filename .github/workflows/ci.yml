@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: ['**']
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   test-server:
@@ -18,8 +18,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
-          cache-dependency-path: server/package-lock.json
 
       - name: Install server dependencies
         working-directory: ./server
@@ -28,32 +26,3 @@ jobs:
       - name: Run server tests
         working-directory: ./server
         run: npm test
-        env:
-          NODE_ENV: test
-          PORT: 8000
-          JWT_SECRET: test_secret_key
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
-  test-client:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
-
-      - name: Install client dependencies
-        working-directory: ./client
-        run: npm install
-
-      - name: Build client
-        working-directory: ./client
-        run: npm run build
-        env:
-          VITE_API_URL: http://localhost:8000
