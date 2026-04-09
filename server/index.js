@@ -12,6 +12,7 @@ const favouriteRoutes = require('./routes/favourites')
 const enquiryRoutes = require('./routes/enquiries')
 const leasingRoutes = require('./routes/leasing')
 const faqRoutes = require('./routes/faqs')
+const qrcodeRoutes = require('./routes/qrcodes')
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -26,6 +27,7 @@ app.use('/api/favourites', favouriteRoutes)
 app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/leasing', leasingRoutes)
 app.use('/api/faqs', faqRoutes)
+app.use('/api/qrcodes', qrcodeRoutes)
 
 app.get('/', (req, res) => {
   res.send(`
