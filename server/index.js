@@ -2,11 +2,28 @@ const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
 
+const errorHandler = require('./middleware/errorHandler')
+const logger = require('./utils/logger')
+
+const authRoutes = require('./routes/auth')
+const carRoutes = require('./routes/cars')
+const bookingRoutes = require('./routes/bookings')
+const favouriteRoutes = require('./routes/favourites')
+const enquiryRoutes = require('./routes/enquiries')
+const leasingRoutes = require('./routes/leasing')
+
 const app = express()
 const PORT = process.env.PORT || 8000
 
 app.use(cors())
 app.use(express.json())
+
+app.use('/api/auth', authRoutes)
+app.use('/api/cars', carRoutes)
+app.use('/api/bookings', bookingRoutes)
+app.use('/api/favourites', favouriteRoutes)
+app.use('/api/enquiries', enquiryRoutes)
+app.use('/api/leasing', leasingRoutes)
 
 app.get('/', (req, res) => {
   res.send(`
@@ -32,11 +49,22 @@ app.get('/', (req, res) => {
 })
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', uptime: process.uptime() })
+  res.json({
+    status: 'ok',
+    uptime: Math.round(process.uptime()),
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString(),
+  })
 })
 
+app.use((req, res) => {
+  res.status(404).json({ error: true, message: `Route ${req.path} not found` })
+})
+
+app.use(errorHandler)
+
 app.listen(PORT, () => {
-  console.log(`Mayfair Motors server running on http://localhost:${PORT}`)
+  logger.info(`Mayfair Motors server running on http://localhost:${PORT}`)
 })
 
 module.exports = app

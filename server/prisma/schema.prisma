@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String    @unique
+  password      String
+  isVerified    Boolean   @default(false)
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bookings      Booking[]
+  favourites    Favourite[]
+  enquiries     Enquiry[]
+  leasingForms  LeasingForm[]
+}
+
+model Car {
+  id          Int       @id @default(autoincrement())
+  make        String
+  model       String
+  year        Int
+  price       Float
+  mileage     String
+  fuel        String
+  gearbox     String
+  seats       Int
+  colour      String
+  type        String
+  description String
+  features    String[]
+  images      String[]
+  status      String    @default("available")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+  favourites  Favourite[]
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  car       Car      @relation(fields: [carId], references: [id])
+  carId     Int
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("pending")
+  payment   Payment?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  booking       Booking  @relation(fields: [bookingId], references: [id])
+  bookingId     Int      @unique
+  amount        Float
+  method        String
+  status        String   @default("pending")
+  stripeId      String?
+  createdAt     DateTime @default(now())
+}
+
+model Favourite {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  car       Car      @relation(fields: [carId], references: [id])
+  carId     Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, carId])
+}
+
+model Enquiry {
+  id        Int      @id @default(autoincrement())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  name      String
+  email     String
+  phone     String?
+  message   String
+  carId     Int?
+  createdAt DateTime @default(now())
+}
+
+model LeasingForm {
+  id        Int      @id @default(autoincrement())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  name      String
+  email     String
+  phone     String
+  message   String?
+  createdAt DateTime @default(now())
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  content     String
+  image       String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FAQ {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model QRCode {
+  id        Int      @id @default(autoincrement())
+  label     String
+  url       String
+  image     String?
+  type      String
+  createdAt DateTime @default(now())
+}
