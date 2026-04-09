@@ -9,15 +9,13 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest --forceExit --detectOpenHandles",
+    "test": "jest --forceExit --detectOpenHandles --runInBand",
     "seed": "node prisma/seed.js"
   },
   "jest": {
     "testEnvironment": "node",
     "testMatch": ["**/tests/**/*.test.js"],
-    "collectCoverageFrom": ["**/*.js", "!**/node_modules/**"],
-    "testTimeout": 10000,
-    "setupFiles": ["./tests/setup.js"]
+    "testTimeout": 10000
   },
   "keywords": [],
   "author": "",
@@ -35,6 +33,6 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.1.14",
-    "supertest": "^7.2.2"
+    "supertest": "^6.3.4"
   }
 }
