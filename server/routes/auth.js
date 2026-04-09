@@ -4,24 +4,18 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { PrismaClient } = require('@prisma/client')
 const asyncHandler = require('../utils/asyncHandler')
+const { authLimiter } = require('../middleware/rateLimiter')
+const { validate, schemas } = require('../middleware/validate')
 
 const prisma = new PrismaClient()
 
 // register
-router.post('/register', asyncHandler(async (req, res) => {
+router.post('/register', validate(schemas.register), asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body
-
-  if (!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ error: true, message: 'All fields are required' })
-  }
 
   const existing = await prisma.user.findUnique({ where: { email } })
   if (existing) {
     return res.status(400).json({ error: true, message: 'Email already in use' })
-  }
-
-  if (password.length < 8) {
-    return res.status(400).json({ error: true, message: 'Password must be at least 8 characters' })
   }
 
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -57,12 +51,8 @@ router.post('/register', asyncHandler(async (req, res) => {
 }))
 
 // login
-router.post('/login', asyncHandler(async (req, res) => {
+router.post('/login', authLimiter, validate(schemas.login), asyncHandler(async (req, res) => {
   const { email, password } = req.body
-
-  if (!email || !password) {
-    return res.status(400).json({ error: true, message: 'Email and password are required' })
-  }
 
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user) {
