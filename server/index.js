@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth')
 const carRoutes = require('./routes/cars')
 const bookingRoutes = require('./routes/bookings')
 const favouriteRoutes = require('./routes/favourites')
+const enquiryRoutes = require('./routes/enquiries')
 
 const app = express()
 const PORT = process.env.PORT || 8000
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/cars', carRoutes)
 app.use('/api/bookings', bookingRoutes)
 app.use('/api/favourites', favouriteRoutes)
+app.use('/api/enquiries', enquiryRoutes)
 
 app.get('/', (req, res) => {
   res.send(`
