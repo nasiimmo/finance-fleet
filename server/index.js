@@ -13,11 +13,15 @@ const enquiryRoutes = require('./routes/enquiries')
 const leasingRoutes = require('./routes/leasing')
 const faqRoutes = require('./routes/faqs')
 const qrcodeRoutes = require('./routes/qrcodes')
+const paymentRoutes = require('./routes/payments')
 
 const app = express()
 const PORT = process.env.PORT || 8000
 
 app.use(cors())
+
+app.use('/api/payments/webhook', express.raw({ type: 'application/json' }))
+
 app.use(express.json())
 
 app.use('/api/auth', authRoutes)
@@ -28,6 +32,7 @@ app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/leasing', leasingRoutes)
 app.use('/api/faqs', faqRoutes)
 app.use('/api/qrcodes', qrcodeRoutes)
+app.use('/api/payments', paymentRoutes)
 
 app.get('/', (req, res) => {
   res.send(`
